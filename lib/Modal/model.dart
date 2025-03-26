@@ -18,13 +18,14 @@ class Weather {
     required this.description,
   });
   factory Weather.fromJson(Map<String, dynamic> json) {
-    return Weather(
-        humidity: json['main']['humidity'],
-        windSpeed: json['wind'],
-        sunrise: json['sys']['sunrise'],
-        sunset: json['sys']['sunset'],
-        cityName: json['name'],
-        temperature: json['main']['temp'] - 273.15,
-        description: json['weather']['description']);
-  }
+  return Weather(
+    humidity: json['main']['humidity'],
+    windSpeed: json['wind']['speed'],
+    sunrise: json['sys']['sunrise'],
+    sunset: json['sys']['sunset'],
+    cityName: json['name'],
+    temperature: json['main']['temp'] - 273.15,
+    description: json['weather'][0]['description'],
+  );
+}
 }

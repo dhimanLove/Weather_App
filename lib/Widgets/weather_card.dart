@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:weatherapp/Modal/model.dart';
@@ -15,6 +15,13 @@ class WeatherCard extends StatelessWidget {
   String formatTime(int timestamp) {
     final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     return DateFormat('hh:mm a').format(date);
+  }
+
+  String getDayNightStatus() {
+    int currentTime = DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
+    return (currentTime >= weather.sunrise && currentTime < weather.sunset)
+        ? "Daytime ☀️"
+        : "Night 🌙";
   }
 
   @override
@@ -44,20 +51,19 @@ class WeatherCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 300),
+          Text(
+            weather.cityName,
             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withOpacity(0.2),
-                      offset: const Offset(0, 2),
-                      blurRadius: 4,
-                    ),
-                  ],
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.2),
+                  offset: const Offset(0, 2),
+                  blurRadius: 4,
                 ),
-            child: Text(weather.cityName),
+              ],
+            ),
           ),
           const SizedBox(height: 15),
           Lottie.asset(
@@ -65,7 +71,19 @@ class WeatherCard extends StatelessWidget {
                 ? 'lib/assets/rain.json'
                 : weather.description.toLowerCase().contains('clear')
                     ? 'lib/assets/sunny.json'
-                    : 'lib/assets/cloudy.json',
+                    : weather.description.toLowerCase().contains('snow')
+                        ? 'lib/assets/snow.json'
+                        :weather.description.toLowerCase().contains('few clouds')
+                        ? 'lib/assets/cloudy.json'
+                          :weather.description.toLowerCase().contains('scattered clouds')
+                        ? 'lib/assets/cloudy.json'
+                          :weather.description.toLowerCase().contains('broken clouds')
+                        ? 'lib/assets/cloudy.json'
+                          :weather.description.toLowerCase().contains('overcast clouds')
+                        ? 'lib/assets/cloudy.json'
+                          :weather.description.toLowerCase().contains('tornado')
+                        ? 'lib/assets/tornado.json'
+            : 'lib/assets/sun.json',
             height: 120,
             width: 120,
             fit: BoxFit.contain,
@@ -92,6 +110,14 @@ class WeatherCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
+            "${formatTime(DateTime.now().millisecondsSinceEpoch ~/ 1000)} | ${getDayNightStatus()}",
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 5),
+          Text(
             weather.description.toUpperCase(),
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: Colors.grey[800],
@@ -112,21 +138,24 @@ class WeatherCard extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Icon(Icons.water_drop_outlined, color: Colors.blue, size: 24),
+                        Icon(Icons.water_drop_outlined,
+                            color: Colors.blue, size: 24),
                         const SizedBox(height: 5),
                         Text(
                           'Humidity',
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         Text(
                           '${weather.humidity}%',
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ],
                     ),
@@ -136,17 +165,19 @@ class WeatherCard extends StatelessWidget {
                         const SizedBox(height: 5),
                         Text(
                           'Wind',
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         Text(
                           '${weather.windSpeed.toStringAsFixed(1)} km/h',
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ],
                     ),
@@ -158,41 +189,105 @@ class WeatherCard extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Icon(Icons.wb_sunny_outlined, color: Colors.orange, size: 24),
+                        Icon(Icons.wb_sunny_outlined,
+                            color: Colors.orange, size: 24),
                         const SizedBox(height: 5),
                         Text(
                           'Sunrise',
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         Text(
                           formatTime(weather.sunrise),
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ],
                     ),
                     Column(
                       children: [
-                        Icon(Icons.nights_stay_outlined, color: Colors.blueGrey, size: 24),
+                        Icon(Icons.nights_stay_outlined,
+                            color: Colors.blueGrey, size: 24),
                         const SizedBox(height: 5),
                         Text(
                           'Sunset',
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         Text(
                           formatTime(weather.sunset),
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.visibility_outlined,
+                          color: Colors.teal,
+                          size: 24,
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Visibility',
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        Text(
+                          '${weather.visibility.toStringAsFixed(1)} km',
+                          style: (Theme.of(context).textTheme.bodyMedium ??
+                                  TextStyle())
+                              .copyWith(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Icon(Icons.my_location_sharp,
+                            color: Colors.blueAccent, size: 24),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Country',
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        Text(
+                            '${weather.country.toString()}',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ],
                     ),

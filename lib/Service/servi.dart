@@ -1,10 +1,11 @@
 import 'package:weatherapp/Modal/model.dart';
 import 'package:http/http.dart'as http;
 import 'dart:convert';
+import 'package:weatherapp/utils/env.dart';
 
 class Services
 {
-  final String apikey = 'ea3c39ccbd60e9688b1d6df53fd4d5ee';
+  final String apikey = Env.Apikey;
   Future<Weather> getWeather(String cityName) async{
     final url = Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apikey');
 
@@ -15,7 +16,7 @@ class Services
     }
     else
       {
-        throw Exception('Failed TO LOad Data');
+        throw Exception('Failed to Load Data');
       }
   }
 }

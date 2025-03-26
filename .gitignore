@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/src/main/assets/flutter_assets/app.*.key
+.env
+lib/utils/env.dart

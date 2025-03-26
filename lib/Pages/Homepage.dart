@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:weatherapp/Modal/model.dart';
 import 'package:weatherapp/Service/servi.dart';
 import 'package:weatherapp/Widgets/weather_card.dart';
@@ -31,7 +32,7 @@ class _HomepageState extends State<Homepage> {
       setState(() {
         isloading = false;
       });
-      Get.snackbar('Error', 'Something Went Wrong',
+      Get.snackbar('Error', '$e',
           backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
@@ -44,13 +45,32 @@ class _HomepageState extends State<Homepage> {
         width: Get.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: _weather != null &&
-                    _weather!.description.toLowerCase().contains('rain')
-                ? [Colors.blueGrey.shade700, Colors.grey.shade900]
-                : _weather != null &&
-                        _weather!.description.toLowerCase().contains('clear')
-                    ? [Colors.orange.shade300, Colors.blue.shade300]
-                    : [Colors.blueGrey.shade400, Colors.grey.shade700],
+            colors: _weather != null
+                ? _weather!.description.toLowerCase().contains('rain')
+                    ? [Colors.blueGrey.shade300, Colors.grey.shade900]
+                    : _weather!.description.toLowerCase().contains('snow')
+                        ? [Colors.blueGrey.shade400, Colors.grey.shade500]
+                        : _weather!.description.toLowerCase().contains('clear')
+                            ? [ Colors.blue.shade300 ,Colors.orange.shade300,]
+                            : _weather!.description
+                                        .toLowerCase()
+                                        .contains('few clouds') ||
+                                    _weather!.description
+                                        .toLowerCase()
+                                        .contains('partial clouds')
+                                ? [Colors.blue.shade300, Colors.grey.shade700]
+                                : _weather!.description
+                                        .toLowerCase()
+                                        .contains('clouds')
+                                    ? [
+                                        Colors.blue.shade500,
+                                        Colors.grey.shade700
+                                      ]
+                                    : [
+                                        Colors.blueGrey.shade400,
+                                        Colors.grey.shade700
+                                      ]
+                : [Colors.blueGrey.shade400, Colors.grey.shade700],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -65,18 +85,39 @@ class _HomepageState extends State<Homepage> {
                 children: [
                   AnimatedOpacity(
                     opacity: 1.0,
-                    duration: const Duration(milliseconds: 500),
-                    child: Text(
-                      "Weather Now",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.3),
-                            offset: const Offset(0, 2),
-                            blurRadius: 4,
+                    duration: const Duration(milliseconds: 600),
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween<double>(begin: 0, end: 1),
+                      duration: const Duration(milliseconds: 600),
+                      builder: (context, opacity, child) {
+                        return Opacity(
+                          opacity: opacity,
+                          child: Transform.translate(
+                            offset: Offset(0, (1 - opacity) * 20),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          /// Lottie.asset('lib/assets/sun.json',
+                          //                               height: 50, width: 50, fit: BoxFit.contain),
+                          Text(
+                            "Weather Now",
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  offset: const Offset(1, 3),
+                                  blurRadius: 7,
+                                ),
+                              ],
+                              letterSpacing: 1.5,
+                            ),
                           ),
                         ],
                       ),
@@ -84,51 +125,55 @@ class _HomepageState extends State<Homepage> {
                   ),
                   const SizedBox(height: 15),
                   AnimatedContainer(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
                     duration: const Duration(milliseconds: 300),
                     child: TextField(
+                      enableIMEPersonalizedLearning: true,
                       controller: Weathercontroller,
+                      cursorColor: Colors.blueGrey,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                       decoration: InputDecoration(
                         hintText: 'Enter City Name',
                         hintStyle: TextStyle(color: Colors.grey.shade600),
                         filled: true,
+                        suffixIcon: Weathercontroller.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  Weathercontroller.clear();
+                                  setState(() {
+                                    _weather = null;
+                                  }); // Reset UI
+                                },
+                              )
+                            : null,
                         fillColor: Colors.white.withOpacity(0.9),
-                        prefixIcon: const Icon(Icons.search, color: Colors.blueGrey),
+                        prefixIcon: isloading
+                            ? Padding(
+                                padding: EdgeInsets.all(10),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.blueGrey),
+                                ),
+                              )
+                            : Icon(Icons.search, color: Colors.blueGrey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      style: const TextStyle(color: Colors.black87, fontSize: 14),
+                      style:
+                          const TextStyle(color: Colors.black87, fontSize: 14),
+                      onSubmitted: (value) => getweather(),
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  AnimatedScale(
-                    scale: isloading ? 0.95 : 1.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: ElevatedButton(
-                      onPressed: getweather,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.blueGrey,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        elevation: 5,
-                      ),
-                      child: const Text(
-                        "Get Weather",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blueGrey,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
                   if (isloading)
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -142,6 +187,19 @@ class _HomepageState extends State<Homepage> {
                         strokeWidth: 2,
                       ),
                     ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  if (_weather == null && !isloading)
+                    AnimatedOpacity(
+                        opacity: 1.0,
+                        duration: const Duration(milliseconds: 500),
+                        child: Lottie.asset(
+                          'lib/assets/Loading.json',
+                          height: 200,
+                          width: 200,
+                          fit: BoxFit.contain,
+                        )),
                   if (_weather != null)
                     AnimatedOpacity(
                       opacity: 1.0,

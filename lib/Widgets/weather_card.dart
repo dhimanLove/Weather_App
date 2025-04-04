@@ -1,302 +1,298 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:weatherapp/Modal/model.dart';
+import 'package:get/get.dart';
 
-class WeatherCard extends StatelessWidget {
+class WeatherCard extends StatefulWidget {
   final Weather weather;
+  final VoidCallback? onRefresh;
 
   const WeatherCard({
     super.key,
     required this.weather,
+    this.onRefresh,
   });
 
+  @override
+  State<WeatherCard> createState() => _WeatherCardState();
+}
+
+class _WeatherCardState extends State<WeatherCard> {
   String formatTime(int timestamp) {
     final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     return DateFormat('hh:mm a').format(date);
   }
 
-  String getDayNightStatus() {
-    int currentTime = DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
-    return (currentTime >= weather.sunrise && currentTime < weather.sunset)
-        ? "Daytime ☀️"
-        : "Night 🌙";
+  bool isDayTime() {
+    final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    return now > widget.weather.sunrise && now < widget.weather.sunset;
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      padding: const EdgeInsets.all(20),
+    return Container(
+      width: Get.width,
+      height: Get.height,
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.7),
-            Colors.white.withOpacity(0.3),
-          ],
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            weather.cityName,
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-              shadows: [
-                Shadow(
-                  color: Colors.black.withOpacity(0.2),
-                  offset: const Offset(0, 2),
-                  blurRadius: 4,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 15),
-          Lottie.asset(
-            weather.description.toLowerCase().contains('rain')
-                ? 'lib/assets/rain.json'
-                : weather.description.toLowerCase().contains('clear')
-                    ? 'lib/assets/sunny.json'
-                    : weather.description.toLowerCase().contains('snow')
-                        ? 'lib/assets/snow.json'
-                        :weather.description.toLowerCase().contains('few clouds')
-                        ? 'lib/assets/cloudy.json'
-                          :weather.description.toLowerCase().contains('scattered clouds')
-                        ? 'lib/assets/cloudy.json'
-                          :weather.description.toLowerCase().contains('broken clouds')
-                        ? 'lib/assets/cloudy.json'
-                          :weather.description.toLowerCase().contains('overcast clouds')
-                        ? 'lib/assets/cloudy.json'
-                          :weather.description.toLowerCase().contains('tornado')
-                        ? 'lib/assets/tornado.json'
-            : 'lib/assets/sun.json',
-            height: 120,
-            width: 120,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(height: 15),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.blue.withOpacity(0.2),
-                  Colors.blue.withOpacity(0.1),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Text(
-              '${weather.temperature.toStringAsFixed(1)}°C',
-              style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue[900],
-                  ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            "${formatTime(DateTime.now().millisecondsSinceEpoch ~/ 1000)} | ${getDayNightStatus()}",
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: Colors.grey[800],
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            weather.description.toUpperCase(),
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Colors.grey[800],
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Column(
-                      children: [
-                        Icon(Icons.water_drop_outlined,
-                            color: Colors.blue, size: 24),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Humidity',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        Text(
-                          '${weather.humidity}%',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.air_outlined, color: Colors.grey, size: 24),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Wind',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        Text(
-                          '${weather.windSpeed.toStringAsFixed(1)} km/h',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
+                    const Icon(Icons.location_on,
+                        color: Colors.white70, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      widget.weather.cityName,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Icon(Icons.wb_sunny_outlined,
-                            color: Colors.orange, size: 24),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Sunrise',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        Text(
-                          formatTime(weather.sunrise),
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.nights_stay_outlined,
-                            color: Colors.blueGrey, size: 24),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Sunset',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        Text(
-                          formatTime(weather.sunset),
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ],
+                IconButton(
+                  icon: const Icon(Icons.refresh,
+                      color: Colors.white54, size: 20),
+                  onPressed: widget.onRefresh,
                 ),
-                SizedBox(
-                  height: 15,
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Lottie.asset(
+                  widget.weather.description.toLowerCase().contains('rain')
+                      ? 'lib/assets/rain.json'
+                      : widget.weather.description
+                              .toLowerCase()
+                              .contains('clear')
+                          ? 'lib/assets/sunny.json'
+                          : widget.weather.description
+                                  .toLowerCase()
+                                  .contains('snow')
+                              ? 'lib/assets/snow.json'
+                              : widget.weather.description
+                                      .toLowerCase()
+                                      .contains('clouds')
+                                  ? 'lib/assets/cloudy.json'
+                                  : 'lib/assets/sun.json',
+                  height: 120,
+                  width: 120,
+                  fit: BoxFit.contain,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                const SizedBox(width: 14),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      children: [
-                        Icon(
-                          Icons.visibility_outlined,
-                          color: Colors.teal,
-                          size: 24,
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Visibility',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        Text(
-                          '${weather.visibility.toStringAsFixed(1)} km',
-                          style: (Theme.of(context).textTheme.bodyMedium ??
-                                  TextStyle())
-                              .copyWith(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      '${widget.weather.temperature.toStringAsFixed(0)}°',
+                      style: const TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Icon(Icons.my_location_sharp,
-                            color: Colors.blueAccent, size: 24),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Country',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        Text(
-                            '${weather.country.toString()}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
+                    Text(
+                      'Feels like ${(widget.weather.temperature - 2).toStringAsFixed(0)}°',
+                      style: const TextStyle(
+                          fontSize: 12, color: Colors.white70),
+                    ),
+                    Text(
+                      widget.weather.description.capitalizeFirst ?? '',
+                      style: const TextStyle(
+                          fontSize: 14, color: Colors.white60),
                     ),
                   ],
                 ),
               ],
             ),
-          ),
-        ],
+
+            const SizedBox(height: 20),
+            Divider(color: Colors.white.withOpacity(0.2), thickness: 0.6),
+
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    const Icon(Icons.air, color: Colors.white70, size: 20),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${widget.weather.windSpeed.toStringAsFixed(0)} km/h',
+                      style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const Text('Wind',
+                        style:
+                            TextStyle(fontSize: 10, color: Colors.white54)),
+                  ],
+                ),
+                Column(
+                  children: [
+                    const Icon(Icons.water_drop,
+                        color: Colors.white70, size: 20),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${widget.weather.humidity}%',
+                      style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const Text('Humidity',
+                        style:
+                            TextStyle(fontSize: 10, color: Colors.white54)),
+                  ],
+                ),
+                Column(
+                  children: [
+                    const Icon(Icons.cloud, color: Colors.white70, size: 20),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${widget.weather.humidity}%',
+                      style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const Text('Rain',
+                        style:
+                            TextStyle(fontSize: 10, color: Colors.white54)),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+            Divider(color: Colors.white.withOpacity(0.2), thickness: 0.6),
+            const SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    const Icon(Icons.wb_sunny,
+                        color: Colors.orangeAccent, size: 20),
+                    const SizedBox(height: 4),
+                    const Text('Sunrise',
+                        style: TextStyle(fontSize: 10, color: Colors.white54)),
+                    Text(formatTime(widget.weather.sunrise),
+                        style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                Column(
+                  children: [
+                    const Icon(Icons.nights_stay,
+                        color: Colors.lightBlueAccent, size: 20),
+                    const SizedBox(height: 4),
+                    const Text('Sunset',
+                        style: TextStyle(fontSize: 10, color: Colors.white54)),
+                    Text(formatTime(widget.weather.sunset),
+                        style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Icon(isDayTime()
+                        ? Icons.wb_sunny
+                        : Icons.nightlight_round,
+                        color: Colors.amberAccent, size: 20),
+                    const SizedBox(height: 4),
+                    Text(isDayTime() ? 'Daytime' : 'Night',
+                        style: const TextStyle(
+                            fontSize: 13, color: Colors.white70)),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+            Divider(color: Colors.white.withOpacity(0.2), thickness: 0.6),
+
+            const SizedBox(height: 10),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Hourly Forecast',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white)),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 100,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  for (var i = 12; i < 19; i++)
+                    Container(
+                      width: 70,
+                      margin: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('${i} PM',
+                              style: const TextStyle(
+                                  fontSize: 11, color: Colors.white70)),
+                          const SizedBox(height: 4),
+                          Lottie.asset(
+                              'lib/assets/${i % 2 == 0 ? "cloudy.json" : "rain.json"}',
+                              height: 30,
+                              width: 30),
+                          const SizedBox(height: 4),
+                          Text('${30 - (i - 12)}°',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

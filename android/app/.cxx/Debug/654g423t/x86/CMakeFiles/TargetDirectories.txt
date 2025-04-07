@@ -1,0 +1,2 @@
+C:/Users/ASUS/OneDrive/Documents/weatherapp/android/app/.cxx/Debug/654g423t/x86/CMakeFiles/edit_cache.dir
+C:/Users/ASUS/OneDrive/Documents/weatherapp/android/app/.cxx/Debug/654g423t/x86/CMakeFiles/rebuild_cache.dir

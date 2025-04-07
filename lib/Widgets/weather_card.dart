@@ -33,12 +33,12 @@ class _WeatherCardState extends State<WeatherCard> {
   Widget build(BuildContext context) {
     return Container(
       width: Get.width,
-      height: Get.height,
+      height: Get.height * 0.76,
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+          colors: [Color(0xFF1F1A3A), Color(0xFF2E2A5A)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -80,9 +80,7 @@ class _WeatherCardState extends State<WeatherCard> {
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -120,22 +118,20 @@ class _WeatherCardState extends State<WeatherCard> {
                     ),
                     Text(
                       'Feels like ${(widget.weather.temperature - 2).toStringAsFixed(0)}°',
-                      style: const TextStyle(
-                          fontSize: 12, color: Colors.white70),
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                     Text(
                       widget.weather.description.capitalizeFirst ?? '',
-                      style: const TextStyle(
-                          fontSize: 14, color: Colors.white60),
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.white60),
                     ),
                   ],
                 ),
               ],
             ),
-
             const SizedBox(height: 20),
             Divider(color: Colors.white.withOpacity(0.2), thickness: 0.6),
-
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -152,8 +148,7 @@ class _WeatherCardState extends State<WeatherCard> {
                           fontWeight: FontWeight.w500),
                     ),
                     const Text('Wind',
-                        style:
-                            TextStyle(fontSize: 10, color: Colors.white54)),
+                        style: TextStyle(fontSize: 10, color: Colors.white54)),
                   ],
                 ),
                 Column(
@@ -169,8 +164,7 @@ class _WeatherCardState extends State<WeatherCard> {
                           fontWeight: FontWeight.w500),
                     ),
                     const Text('Humidity',
-                        style:
-                            TextStyle(fontSize: 10, color: Colors.white54)),
+                        style: TextStyle(fontSize: 10, color: Colors.white54)),
                   ],
                 ),
                 Column(
@@ -185,17 +179,14 @@ class _WeatherCardState extends State<WeatherCard> {
                           fontWeight: FontWeight.w500),
                     ),
                     const Text('Rain',
-                        style:
-                            TextStyle(fontSize: 10, color: Colors.white54)),
+                        style: TextStyle(fontSize: 10, color: Colors.white54)),
                   ],
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
             Divider(color: Colors.white.withOpacity(0.2), thickness: 0.6),
             const SizedBox(height: 10),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -229,9 +220,7 @@ class _WeatherCardState extends State<WeatherCard> {
                 ),
                 Column(
                   children: [
-                    Icon(isDayTime()
-                        ? Icons.wb_sunny
-                        : Icons.nightlight_round,
+                    Icon(isDayTime() ? Icons.wb_sunny : Icons.nightlight_round,
                         color: Colors.amberAccent, size: 20),
                     const SizedBox(height: 4),
                     Text(isDayTime() ? 'Daytime' : 'Night',
@@ -241,10 +230,8 @@ class _WeatherCardState extends State<WeatherCard> {
                 ),
               ],
             ),
-
             const SizedBox(height: 20),
             Divider(color: Colors.white.withOpacity(0.2), thickness: 0.6),
-
             const SizedBox(height: 10),
             const Align(
               alignment: Alignment.centerLeft,

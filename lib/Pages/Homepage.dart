@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:weatherapp/Modal/model.dart';
-import 'package:weatherapp/Pages/snacbars.dart';
+import 'package:weatherapp/Widgets/snacbars.dart';
 import 'package:weatherapp/Service/servi.dart';
 import 'package:weatherapp/Widgets/weather_card.dart';
 
@@ -32,6 +32,7 @@ class _HomepageState extends State<Homepage> {
     } catch (e) {
       setState(() {
         isLoading = false;
+
       });
      AppSnackbar.error('Something went wrong''$e');
     }

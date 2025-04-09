@@ -41,15 +41,26 @@ dependencies:
   lottie: ^3.3.1
   provider:
   intl: ^0.20.2
+  line_icons:
+  google_maps_flutter:
+  google_nav_bar:
   get: ^4.7.2
   flutter_dotenv: ^5.2.1
   onesignal_flutter:
   shimmer: ^3.0.0
   flutter_launcher_icons:
+  curved_navigation_bar:
+  flutter_slidable:
+  animations:
+  settings_ui:
+  stylish_bottom_bar:
+  google_fonts:
+  image_picker:
   flutter_animate:
   firebase_core:
   firebase_auth:
   google_sign_in:
+  salomon_bottom_bar:
 dev_dependencies:
   flutter_test:
     sdk: flutter

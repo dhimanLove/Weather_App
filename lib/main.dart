@@ -5,15 +5,12 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:weatherapp/Pages/Homepage.dart';
 import 'package:weatherapp/Pages/onboarrding.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'package:weatherapp/Widgets/Bottomnavbar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
-//  await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
   OneSignal.initialize("YOUR_APP_ID");
@@ -34,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Mausam Dekhlo',
         debugShowCheckedModeBanner: false,
         home: FirebaseAuth.instance.currentUser != null
-            ? Homepage()
+            ? BottomNavBar()
             : OnboardingScreen());
   }
 }

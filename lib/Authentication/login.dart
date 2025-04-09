@@ -17,11 +17,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   FirebaseAuth auth = FirebaseAuth.instance;
-bool isValidEmail(String email) {
-  // Regular expression for basic email validation
-  final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-  return emailRegExp.hasMatch(email);
-}
+  bool isValidEmail(String email) {
+    // Regular expression for basic email validation
+    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegExp.hasMatch(email);
+  }
 
   // Updated Firebase initialization
   void initFirebase() async {
@@ -31,7 +31,7 @@ bool isValidEmail(String email) {
   }
 
   final usernameController = TextEditingController();
-  final  passwordController = TextEditingController();
+  final passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool obscurePassword = true;
   bool isLoading = false;
@@ -61,13 +61,11 @@ bool isValidEmail(String email) {
     super.dispose();
   }
 
-
   void handleLogin() async {
     if (formKey.currentState?.validate() ?? false) {
       setState(() => isLoading = true);
 
       try {
-
         await auth.signInWithEmailAndPassword(
           email: usernameController.text.trim(),
           password: passwordController.text,
@@ -85,7 +83,6 @@ bool isValidEmail(String email) {
           borderRadius: 20,
           duration: const Duration(seconds: 3),
         );
-
 
         Get.offAll(() => const Homepage());
       } on FirebaseAuthException catch (e) {
@@ -144,15 +141,12 @@ bool isValidEmail(String email) {
         return;
       }
 
-
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-
 
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
-
       );
 
       // Sign in with credential
@@ -162,14 +156,12 @@ bool isValidEmail(String email) {
       Get.snackbar(
         "Success",
         "Google Sign-In Successful! 🎉",
-
         backgroundColor: Colors.black87,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(16),
         borderRadius: 20,
         duration: const Duration(seconds: 3),
-
       );
 
       Get.offAll(() => const Homepage());
@@ -193,9 +185,7 @@ bool isValidEmail(String email) {
     setState(() => isLoading = true);
 
     try {
-
       final AppleAuthProvider appleProvider = AppleAuthProvider();
-
 
       await auth.signInWithProvider(appleProvider);
 
@@ -250,7 +240,6 @@ bool isValidEmail(String email) {
             ),
           ),
 
-
           Positioned(
             top: 50,
             left: 30,
@@ -272,9 +261,8 @@ bool isValidEmail(String email) {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF4682B4)
-                              .withOpacity(0.2),
-                          blurRadius: 10, 
+                          color: const Color(0xFF4682B4).withOpacity(0.2),
+                          blurRadius: 10,
                           spreadRadius: 2,
                         ),
                       ],
@@ -305,9 +293,8 @@ bool isValidEmail(String email) {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF87CEEB)
-                              .withOpacity(0.1), 
-                          blurRadius: 10, 
+                          color: const Color(0xFF87CEEB).withOpacity(0.1),
+                          blurRadius: 10,
                           spreadRadius: 2,
                         ),
                       ],
@@ -501,56 +488,57 @@ bool isValidEmail(String email) {
                       const SizedBox(height: 10),
 
                       // Forgot Password option
-                     Align(
-  alignment: Alignment.centerRight,
-  child: TextButton(
-    onPressed: () {
-      // Add password reset functionality
-      String email = usernameController.text.trim();
-      if (isValidEmail(email)) {
-        auth.sendPasswordResetEmail(email: email).then((_) {
-          Get.snackbar(
-            "Password Reset",
-            "We've sent a password reset link to your email",
-            backgroundColor: Colors.green[700],
-            colorText: Colors.white,
-            snackPosition: SnackPosition.BOTTOM,
-            margin: const EdgeInsets.all(16),
-            borderRadius: 20,
-          );
-        }).catchError((error) {
-          Get.snackbar(
-            "Error",
-            "Couldn't send reset email. Please check your email address.",
-            backgroundColor: Colors.red[700],
-            colorText: Colors.white,
-            snackPosition: SnackPosition.BOTTOM,
-            margin: const EdgeInsets.all(16),
-            borderRadius: 20,
-          );
-        });
-      } else {
-        Get.snackbar(
-          "Error",
-          "Please enter a valid email address first",
-          backgroundColor: Colors.red[700],
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: const EdgeInsets.all(16),
-          borderRadius: 20,
-        );
-      }
-    },
-    child: const Text(
-      "Forgot Password?",
-      style: TextStyle(
-        color: Colors.white70,
-        fontWeight: FontWeight.w500,
-      ),
-    ),
-  ),
-),
-const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            String email = usernameController.text.trim();
+                            if (isValidEmail(email)) {
+                              auth
+                                  .sendPasswordResetEmail(email: email)
+                                  .then((_) {
+                                Get.snackbar(
+                                  "Password Reset",
+                                  "We've sent a password reset link to your email",
+                                  backgroundColor: Colors.green[700],
+                                  colorText: Colors.white,
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  margin: const EdgeInsets.all(16),
+                                  borderRadius: 20,
+                                );
+                              }).catchError((error) {
+                                Get.snackbar(
+                                  "Error",
+                                  "Couldn't send reset email. Please check your email address.",
+                                  backgroundColor: Colors.red[700],
+                                  colorText: Colors.white,
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  margin: const EdgeInsets.all(16),
+                                  borderRadius: 20,
+                                );
+                              });
+                            } else {
+                              Get.snackbar(
+                                "Error",
+                                "Please enter a valid email address first",
+                                backgroundColor: Colors.red[700],
+                                colorText: Colors.white,
+                                snackPosition: SnackPosition.BOTTOM,
+                                margin: const EdgeInsets.all(16),
+                                borderRadius: 20,
+                              );
+                            }
+                          },
+                          child: const Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
 
                       // Animated Login Button (Matching SignupScreen Colors)
                       isLoading

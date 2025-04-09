@@ -38,11 +38,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // Animated Background Gradient
           AnimatedContainer(
             duration: const Duration(seconds: 10),
             decoration: BoxDecoration(
-             gradient: LinearGradient(
+              gradient: LinearGradient(
                 colors: [
                   const Color(0xFF1E2A44),
                   const Color(0xFF0F1626),
@@ -54,8 +53,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ),
             ),
           ),
-
-          // Floating Animated Circles with Parallax Effect
           Positioned(
             top: 80,
             left: 20,
@@ -120,8 +117,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               },
             ),
           ),
-
-          
           SafeArea(
             child: Padding(
               padding:

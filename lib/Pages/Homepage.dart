@@ -187,13 +187,9 @@ class _HomePageState extends State<HomePage> {
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  O3D(
-                                    src: "lib/assets/cloud__sun_anim.glb",
-                                    controller: o3dController,
-                                    ar: false,
-                                    autoPlay: true,
-                                    autoRotate: false,
-                                  ),
+                                  Lottie.asset(
+                                    'lib/assets/cloudy.json'
+                                  )
                                 ],
                               ),
                             ),
@@ -310,16 +306,16 @@ class _HomePageState extends State<HomePage> {
                               // Wind Section
                               Row(
                                 children: [
-                                  const Icon(Icons.air, color: Colors.white70),
+                                  const Icon(Icons.air, color: Colors.white70,size: 30,),
                                   const SizedBox(
-                                      width: 10), // Adjusted to give some space
+                                      width: 10),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Wind',
-                                        style: TextStyle(color: Colors.white70),
+                                        style: TextStyle(color: Colors.white70,),
                                       ),
                                       Text(
                                         '${weatherkaithal!.windSpeed.toStringAsFixed(1)} m/s',
@@ -331,13 +327,13 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
 
-                              // Humidity Section
+                              
                               Row(
                                 children: [
-                                  const Icon(Icons.water_drop,
-                                      color: Colors.white54),
+                                  const Icon(Icons.foggy,
+                                      color: Color(0xFF8ADAFF),size: 30),
                                   const SizedBox(
-                                      width: 10), // Adjusted to give some space
+                                      width: 10), 
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

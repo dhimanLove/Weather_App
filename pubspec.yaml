@@ -1,107 +1,106 @@
 name: weatherapp
 description: "Weather app using flutter and Openweather API"
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none' # Prevents accidental publishing to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.1
+  sdk:  3.7.2
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-  http: ^1.3.0
-  geolocator:
-  font_awesome_flutter: ^10.8.0
-  geocoding: ^3.0.0
-  lottie: ^3.3.1
-  flutter_map: 
-  flutter_map_location_marker:
+  # UI and Icons
+  cupertino_icons:  
+  font_awesome_flutter:  
+  google_fonts:  
+  line_icons:  
+  flutter_svg:  
+  rive:  
 
-  latlong2: ^0.9.0
-  provider:
-  intl: ^0.20.2  
-  line_icons:
-  google_maps_flutter:
-  google_nav_bar:
-  get: ^4.7.2
-  flutter_dotenv: ^5.2.1
-  onesignal_flutter:
-  shimmer: ^3.0.0
-  flutter_launcher_icons:
-  flutter_3d_controller:
-  curved_navigation_bar:
-  flutter_slidable:
-  animations:
-  settings_ui:
-  stylish_bottom_bar:
-  model_viewer_plus:
-  google_fonts:
-  image_picker:
-  flutter_animate:
-  firebase_core:
-  firebase_auth:
-  google_sign_in:
-  salomon_bottom_bar:
-  flare_flutter:
-  parallax_animation:
-  flutter_cube:
-  flutter_svg:
-  rive:
-  flutter_glass:
-  o3d: 
+  # Networking and APIs
+  http:  
+  flutter_dotenv:  
+  onesignal_flutter:  
+
+  # Location and Maps
+  geolocator:  
+  geocoding:  
+  flutter_map:  
+  flutter_map_location_marker:  
+  latlong2:  
+  google_maps_flutter:  
+
+  # State Management and Utilities
+  provider:  
+  intl:  
+  get:  
+
+  # Animations and Effects
+  lottie:  
+  animations:  
+  flare_flutter:  
+  parallax_animation:  
+  flutter_animate:  
+  flutter_glass:  
+
+  # Navigation and UI Components
+  google_nav_bar:  
+  curved_navigation_bar:  
+  flutter_slidable:  
+  settings_ui:  
+  stylish_bottom_bar:  
+  salomon_bottom_bar:  
+
+  # 3D and Model Rendering
+  flutter_cube:  
+  flutter_3d_controller:  
+  model_viewer_plus:  
+  o3d:  
+
+  # Media and Files
+  image_picker:  
+  shimmer:  
+  flutter_launcher_icons:  
+
+  # Firebase
+  firebase_core:  
+  firebase_auth:  
+  google_sign_in:  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^5.0.0
-
+  flutter_lints:  
 
 flutter_launcher_icons:
   android: true
   ios: true
   image_path: "lib/assets/IMage/Fasticon-Hand-Draw-Iphone-Weather.512.png"
   adaptive_icon_foreground: "lib/assets/IMage/Fasticon-Hand-Draw-Iphone-Weather.512.png"
-flutter:
 
+flutter:
   uses-material-design: true
 
-
-  # To add assets to your application, add an assets section, like this:
   assets:
+    # App Icon and Images
     - lib/assets/IMage/Fasticon-Hand-Draw-Iphone-Weather.512.png
-    - lib/assets/cloud__sun_anim/ 
-    - lib/assets/cloud__sun_anim.glb
-    - lib\assets\cloudy.json
-    - lib\assets\rain.json
-    - lib\assets\snowfall.json
+
+    # JSON Animation Files
+    - lib/assets/cloudy.json
+    - lib/assets/rain.json
+    - lib/assets/snowfall.json
     - lib/assets/sunny.json
     - lib/assets/Loading.json
     - lib/assets/Weather.json
     - lib/assets/sun.json
     - lib/assets/snow.json
+
+    # 3D Model Assets
     - lib/assets/Earth/
+    - lib/assets/Challenger.obj
+    - lib/assets/the-sun/
+    - lib/assets/Sun/sun.obj
+    - lib/assets/Sun/sun.mtl
+    - lib/assets/Sun/textures/sun.jpeg

@@ -36,9 +36,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Mausam Dekhlo',
         debugShowCheckedModeBanner: false,
         home: FirebaseAuth.instance.currentUser != null
-            ? BottomNavBar(
-                
-            )
+            ? BottomNavBar()
             : OnboardingScreen());
   }
 }

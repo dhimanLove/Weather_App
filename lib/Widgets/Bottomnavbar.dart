@@ -20,7 +20,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> pages = [
     const HomePage(),
     const ExploreScreen(),
-    const notifications(),
+    const Notifications(),
     AccountScreen(),
   ];
 

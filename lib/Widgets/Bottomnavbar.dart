@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:weatherapp/Modal/forecast_model.dart';
 import 'package:weatherapp/Pages/Homepage.dart';
 import 'package:weatherapp/Pages/Profile.dart';
-import 'package:weatherapp/Pages/onboarrding.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:weatherapp/Widgets/notification.dart';
+import 'package:weatherapp/Widgets/weathermap.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -17,9 +18,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int selectedIndex = 0;
 
   final List<Widget> pages = [
-    const Homepage(),
-    const GpsPage(),
-    const NotificationsPage(),
+    const HomePage(),
+    const ExploreScreen(),
+    const notifications(),
     AccountScreen(),
   ];
 
@@ -49,6 +50,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         index: selectedIndex,
+        letIndexChange: (index) => true,
         height: 60,
         items: navItems,
         color: barColor,
@@ -61,34 +63,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
             selectedIndex = index;
           });
         },
-      ),
-    );
-  }
-}
-
-class GpsPage extends StatelessWidget {
-  const GpsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'GPS',
-        style: TextStyle(color: Colors.white, fontSize: 24),
-      ),
-    );
-  }
-}
-
-class NotificationsPage extends StatelessWidget {
-  const NotificationsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Notifications',
-        style: TextStyle(color: Colors.white, fontSize: 24),
       ),
     );
   }

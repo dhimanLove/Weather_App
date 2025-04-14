@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:weatherapp/Widgets/Bottomnavbar.dart';
 import 'package:weatherapp/firebase_options.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weatherapp/Authentication/login.dart';
@@ -70,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen>
       await FirebaseAuth.instance.signInWithProvider(googleProvider);
 
       setState(() => isLoading = false);
-      Get.off(() => const Homepage());
+      Get.off(() => const HomePage());
     } catch (e) {
       setState(() => isLoading = false);
       Get.snackbar(
@@ -102,7 +103,7 @@ class _SignupScreenState extends State<SignupScreen>
       await FirebaseAuth.instance.signInWithProvider(appleProvider);
 
       setState(() => isLoading = false);
-      Get.off(() => const Homepage());
+      Get.off(() => const HomePage());
     } catch (e) {
       setState(() => isLoading = false);
       Get.snackbar(
@@ -132,12 +133,13 @@ class _SignupScreenState extends State<SignupScreen>
       try {
         setState(() => isLoading = true);
 
-        // Create user with email and password
+        
         UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text,
         );
+
 
         // Update user display name (username)
         await userCredential.user?.updateDisplayName(usernameController.text);
@@ -157,7 +159,7 @@ class _SignupScreenState extends State<SignupScreen>
         );
 
       
-        Get.off(() => const Homepage());
+        Get.off(() => BottomNavBar);
       } on FirebaseAuthException catch (e) {
         setState(() => isLoading = false);
 

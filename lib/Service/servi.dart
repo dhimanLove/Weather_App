@@ -11,11 +11,11 @@ class Services {
         'https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apikeyServices');
 
     final http.Response responseGetWeatherServices =
-        await http.get(urlGetWeatherServices);
+    await http.get(urlGetWeatherServices);
     if (responseGetWeatherServices.statusCode == 200) {
       return Weather.fromJson(jsonDecode(responseGetWeatherServices.body));
     } else {
-      throw Exception('Failed to load weather data');
+      throw Exception('Failed to load weather data for $cityName');
     }
   }
 
@@ -24,17 +24,17 @@ class Services {
         'https://api.openweathermap.org/geo/1.0/direct?q=$cityName&limit=1&appid=$apikeyServices');
 
     final http.Response responseGetCoordinatesServices =
-        await http.get(urlGetCoordinatesServices);
+    await http.get(urlGetCoordinatesServices);
     if (responseGetCoordinatesServices.statusCode == 200) {
       List<dynamic> dataGetCoordinatesServices =
-          jsonDecode(responseGetCoordinatesServices.body);
+      jsonDecode(responseGetCoordinatesServices.body);
       if (dataGetCoordinatesServices.isNotEmpty) {
         return Geocoding.fromJson(dataGetCoordinatesServices[0]);
       } else {
-        throw Exception('Location not found');
+        throw Exception('Location $cityName not found');
       }
     } else {
-      throw Exception('Failed to fetch coordinates');
+      throw Exception('Failed to fetch coordinates for $cityName');
     }
   }
 
@@ -43,11 +43,25 @@ class Services {
         'https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$apikeyServices');
 
     final http.Response responseGetForecastServices =
-        await http.get(urlGetForecastServices);
+    await http.get(urlGetForecastServices);
     if (responseGetForecastServices.statusCode == 200) {
       return Forecast.fromJson(jsonDecode(responseGetForecastServices.body));
     } else {
-      throw Exception('Failed to fetch forecast data');
+      throw Exception('Failed to fetch forecast data for lat: $lat, lon: $lon');
+    }
+  }
+
+  // New method to get weather by coordinates
+  Future<Weather> getWeatherByCoordinates(double lat, double lon) async {
+    final Uri urlGetWeatherByCoordinates = Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apikeyServices');
+
+    final http.Response responseGetWeatherByCoordinates =
+    await http.get(urlGetWeatherByCoordinates);
+    if (responseGetWeatherByCoordinates.statusCode == 200) {
+      return Weather.fromJson(jsonDecode(responseGetWeatherByCoordinates.body));
+    } else {
+      throw Exception('Failed to load weather data for lat: $lat, lon: $lon');
     }
   }
 }

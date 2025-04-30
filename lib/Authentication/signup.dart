@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:weatherapp/Widgets/Bottomnavbar.dart';
-import 'package:weatherapp/firebase_options.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weatherapp/Authentication/login.dart';
 import 'package:weatherapp/Pages/Homepage.dart';
@@ -52,16 +51,8 @@ class _SignupScreenState extends State<SignupScreen>
       CurvedAnimation(parent: animationController, curve: Curves.easeInOutSine),
     );
 
-    initFirebase();
   }
-
-  void initFirebase() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
   
-  }
-
   void signInWithGoogle() async {
     try {
       setState(() => isLoading = true);

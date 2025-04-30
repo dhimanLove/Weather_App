@@ -1,0 +1,2 @@
+C:/Users/ASUS/Downloads/loduu/Weather_App/android/app/.cxx/Debug/3n25a733/x86/CMakeFiles/edit_cache.dir
+C:/Users/ASUS/Downloads/loduu/Weather_App/android/app/.cxx/Debug/3n25a733/x86/CMakeFiles/rebuild_cache.dir

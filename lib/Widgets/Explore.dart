@@ -39,7 +39,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
       setState(() {
         isLoading = false;
       });
-      AppSnackbar.error('Could not fetch weather data for "${weatherController.text}": $e');
+      AppSnackbar.error(
+        'Could not fetch weather data for "${weatherController.text}": $e',
+      );
     }
   }
 
@@ -51,10 +53,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         width: Get.width,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF1E2A44),
-              Color(0xFF0F1626),
-            ],
+            colors: [Color(0xFF1E2A44), Color(0xFF0F1626)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -79,18 +78,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       hintStyle: const TextStyle(color: Colors.white70),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.1),
-                      prefixIcon: const Icon(Icons.search, color: Colors.white70),
-                      suffixIcon: weatherController.text.isNotEmpty
-                          ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.white70),
-                        onPressed: () {
-                          weatherController.clear();
-                          setState(() {
-                            _weather = null; // Clear displayed weather on clear
-                          });
-                        },
-                      )
-                          : null,
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.white70,
+                      ),
+                      suffixIcon:
+                          weatherController.text.isNotEmpty
+                              ? IconButton(
+                                icon: const Icon(
+                                  Icons.clear,
+                                  color: Colors.white70,
+                                ),
+                                onPressed: () {
+                                  weatherController.clear();
+                                  setState(() {
+                                    _weather = null;
+                                  });
+                                },
+                              )
+                              : null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
@@ -103,7 +109,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   const SizedBox(height: 20),
                   if (isLoading)
                     Lottie.asset(
-                      'lib/assets/Loading.json',
+                      'lib/assets/load.json',
                       height: 200,
                       width: 200,
                       fit: BoxFit.cover,
@@ -112,20 +118,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       animate: true,
                     )
                   else if (_weather != null)
-                    WeatherCard( // Display the WeatherCard as a widget here
-                      weather: _weather!,
-                      onRefresh: getWeather,
-                    )
+                    WeatherCard(weather: _weather!, onRefresh: getWeather)
                   else
                     Column(
                       children: [
                         Lottie.asset(
-                          'lib/assets/search.json',
+                          'lib/assets/load.json',
                           height: 200,
                           width: 200,
                           fit: BoxFit.cover,
-                          repeat: false,
-                          reverse: false,
+                          repeat: true,
+                          reverse: true,
                           animate: true,
                         ),
                         const SizedBox(height: 10),

@@ -6,7 +6,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:weatherapp/Pages/Homepage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:weatherapp/Widgets/Bottomnavbar.dart';
-import 'package:weatherapp/firebase_options.dart';
 import 'package:weatherapp/Modal/model.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,15 +32,10 @@ class _LoginScreenState extends State<LoginScreen>
     return emailRegExp.hasMatch(email);
   }
 
-  void initFirebase() async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-  }
 
   @override
   void initState() {
     super.initState();
-    initFirebase();
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 4))
           ..repeat(reverse: true);

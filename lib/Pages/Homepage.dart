@@ -5,10 +5,12 @@ import 'package:lottie/lottie.dart';
 import 'package:o3d/o3d.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weatherapp/Modal/model.dart';
+import 'package:weatherapp/Pages/Sunset.dart';
 import 'package:weatherapp/Widgets/snacbars.dart';
 import 'package:weatherapp/Service/servi.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
+import 'package:geolocator/geolocator.dart'; // For location services
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,31 +24,70 @@ class _HomePageState extends State<HomePage> {
   final Flutter3DController controller = Flutter3DController();
   final Services weatherservice = Services();
   bool isLoading = false;
-  Weather? weatherkaithal;
+  Weather? weather;
+  String locationName = 'Kaithal';
 
   @override
   void initState() {
     super.initState();
-    _getKaithalWeather();
+    _getLocationWeather();
   }
 
-  Future<void> _getKaithalWeather() async {
+  Future<void> _checkAndRequestPermissions() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        AppSnackbar.error('Location permissions are denied');
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      AppSnackbar.error(
+        'Location permissions are permanently denied, using Kaithal as fallback',
+      );
+      return;
+    }
+  }
+
+  Future<void> _getLocationWeather() async {
     setState(() {
       isLoading = true;
-      weatherkaithal = null;
+      weather = null;
     });
 
     try {
-      final weather = await weatherservice.getWeather('Kaithal');
+      await _checkAndRequestPermissions();
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low,
+      );
+      final weatherData = await weatherservice.getWeatherByCoordinates(
+        position.latitude,
+        position.longitude,
+      );
       setState(() {
-        weatherkaithal = weather;
+        weather = weatherData;
         isLoading = false;
+        locationName = weatherData.cityName;
       });
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      AppSnackbar.error('Could not fetch weather data for Kaithal: $e');
+      AppSnackbar.error(
+        'Location or weather error: $e, using Kaithal as fallback',
+      );
+      try {
+        final kaithalWeather = await weatherservice.getWeather('Kaithal');
+        setState(() {
+          weather = kaithalWeather;
+          isLoading = false;
+          locationName = 'Kaithal';
+        });
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        AppSnackbar.error('Could not fetch weather data for Kaithal: $e');
+      }
     }
   }
 
@@ -64,25 +105,25 @@ class _HomePageState extends State<HomePage> {
       return [
         const Color(0xFFE39122),
         const Color(0xff2E3155),
-        const Color(0xff000000)
+        const Color(0xff000000),
       ];
     } else if (weather.isMorning()) {
       return [
         const Color(0xFFFFCDD2),
         const Color(0xFFFFCA28),
-        const Color(0xFF424242)
+        const Color(0xFF424242),
       ];
     } else if (weather.isEvening()) {
       return [
         const Color(0xFF6A1B9A),
         const Color(0xFF1A237E),
-        const Color(0xFF000000)
+        const Color(0xFF000000),
       ];
     } else if (weather.isNighttime()) {
       return [
         const Color(0xFF0D47A1),
         const Color(0xFF1B263B),
-        const Color(0xFF000000)
+        const Color(0xFF000000),
       ];
     }
     return [const Color(0xFF1E2A44), const Color(0xFF0F1626)]; // Fallback
@@ -96,7 +137,7 @@ class _HomePageState extends State<HomePage> {
         width: Get.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: _getBackgroundColors(weatherkaithal),
+            colors: _getBackgroundColors(weather),
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -116,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Kaithal",
+                            locationName,
                             style: GoogleFonts.montserratAlternates(
                               color: Colors.white,
                               fontSize: 18,
@@ -124,15 +165,15 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            weatherkaithal == null
+                            weather == null
                                 ? "Hello, Welcome"
-                                : weatherkaithal!.isDaytime()
-                                    ? "Good Day 🌞"
-                                    : weatherkaithal!.isEvening()
-                                        ? "Good Evening 🌆"
-                                        : weatherkaithal!.isNighttime()
-                                            ? "Good Night 🌚"
-                                            : "Nice to meet you👋",
+                                : weather!.isDaytime()
+                                ? "Good Day 🌞"
+                                : weather!.isEvening()
+                                ? "Good Evening 🌆"
+                                : weather!.isNighttime()
+                                ? "Good Night 🌚"
+                                : "Nice to meet you👋",
                             style: GoogleFonts.montserratAlternates(
                               color: Colors.white,
                               fontSize: 25,
@@ -146,15 +187,16 @@ class _HomePageState extends State<HomePage> {
                         height: 45,
                         width: 45,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(width: 1, color: Colors.white)),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(width: 1, color: Colors.white),
+                        ),
                         child: Center(
                           child: IconButton(
                             icon: const Icon(
                               Icons.refresh,
                               color: Colors.white,
                             ),
-                            onPressed: _getKaithalWeather,
+                            onPressed: _getLocationWeather,
                           ),
                         ),
                       ),
@@ -163,59 +205,53 @@ class _HomePageState extends State<HomePage> {
                   if (isLoading)
                     Center(
                       child: Lottie.asset(
-                        'lib/assets/Loading.json',
+                        'lib/assets/load.json',
                         height: 200,
                         width: 200,
-                        fit: BoxFit.fitWidth,
                         repeat: true,
                         reverse: true,
                         animate: true,
                       ),
                     )
-                  else if (weatherkaithal != null)
+                  else if (weather != null)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (weatherkaithal!.description
-                            .toLowerCase()
-                            .contains('clouds'))
+                        if (weather!.description.toLowerCase().contains(
+                          'clouds',
+                        ))
                           Center(
                             child: SizedBox(
-                              width: 250,
-                              height: 350,
+                              width: 200,
+                              height: 250,
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  Lottie.asset(
-                                    'lib/assets/cloudy.json'
-                                  )
+                                  Lottie.asset('lib/assets/cloudy.json'),
                                 ],
                               ),
                             ),
                           )
                         else
                           Lottie.asset(
-                            weatherkaithal!.description
-                                    .toLowerCase()
-                                    .contains('rain')
+                            weather!.description.toLowerCase().contains('rain')
                                 ? 'lib/assets/rain.json'
-                                : weatherkaithal!.description
-                                        .toLowerCase()
-                                        .contains('clear')
-                                    ? 'lib/assets/sunny.json'
-                                    : weatherkaithal!.description
-                                            .toLowerCase()
-                                            .contains('snow')
-                                        ? 'lib/assets/snow.json'
-                                        : 'lib/assets/sun.json',
+                                : weather!.description.toLowerCase().contains(
+                                  'clear',
+                                )
+                                ? 'lib/assets/sunny.json'
+                                : weather!.description.toLowerCase().contains(
+                                  'snow',
+                                )
+                                ? 'lib/assets/snow.json'
+                                : 'lib/assets/sun.json',
                             height: 250,
                             width: 300,
                             fit: BoxFit.cover,
                           ),
-                        const SizedBox(height: 5),
                         Text(
-                          '${weatherkaithal!.temperature.toStringAsFixed(1)}°C',
+                          '${weather!.temperature.toStringAsFixed(1)}°C',
                           style: GoogleFonts.montserratAlternates(
                             fontSize: 60,
                             fontWeight: FontWeight.bold,
@@ -223,10 +259,19 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Text(
-                          weatherkaithal!.description.capitalizeFirst ??
-                              'Loading...',
-                          style: GoogleFonts.montserratAlternates(
-                              fontSize: 18, color: Colors.white70),
+                          weather!.description.capitalizeFirst ?? 'Loading...',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 20,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        Text(
+                          'Feels Like${weather?.feelsLike.toStringAsFixed(1)}°C',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -244,47 +289,83 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.wb_sunny,
-                                      size: 30, color: Colors.orangeAccent),
-                                  const SizedBox(width: 10),
+                                  const Icon(
+                                    Icons.wb_sunny,
+                                    size: 30,
+                                    color: Colors.orangeAccent,
+                                  ),
+                                  const SizedBox(width: 8),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text('Sunrise',
-                                          style:
-                                              TextStyle(color: Colors.white70)),
-                                      Text(_formatTime(weatherkaithal!.sunrise),
-                                          style: const TextStyle(
-                                              color: Colors.white)),
+                                      Text(
+                                        'Sunrise',
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        _formatTime(weather!.sunrise),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                               Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.nights_stay,
-                                      size: 30, color: Colors.lightBlueAccent),
-                                  const SizedBox(width: 10),
+                                  IconButton(onPressed: (){
+                                    Get.to(InfoScreen( cityName: weather!.cityName));
+                                  }, icon:
+                                    const Icon(
+                                      Icons.wb_sunny,
+                                      size: 30,
+                                      color: Colors.orangeAccent,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
+                                      Text(
                                         'Sunset',
-                                        style: TextStyle(color: Colors.white70),
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                       Text(
-                                        _formatTime(weatherkaithal!.sunset),
+                                        _formatTime(weather!.sunset),
                                         style: const TextStyle(
-                                            color: Colors.white),
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -293,59 +374,80 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 5),
-                        const Divider(
-                          thickness: 0.2,
-                          color: Colors.white,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              // Wind Section
                               Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.air, color: Colors.white70,size: 30,),
-                                  const SizedBox(
-                                      width: 10),
+                                  const Icon(
+                                    Icons.air,
+                                    size: 30,
+                                    color: Colors.white70,
+                                  ),
+                                  const SizedBox(width: 8),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
+                                      Text(
                                         'Wind',
-                                        style: TextStyle(color: Colors.white70,),
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                       Text(
-                                        '${weatherkaithal!.windSpeed.toStringAsFixed(1)} m/s',
+                                        '${weather!.windSpeed.toStringAsFixed(1)} m/s',
                                         style: const TextStyle(
-                                            color: Colors.white),
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-
-                              
                               Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.foggy,
-                                      color: Color(0xFF8ADAFF),size: 30),
-                                  const SizedBox(
-                                      width: 10), 
+                                  const Icon(
+                                    Icons.foggy,
+                                    size: 30,
+                                    color: Color(0xFF8ADAFF),
+                                  ),
+                                  const SizedBox(width: 8),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
+                                      Text(
                                         'Humidity',
-                                        style: TextStyle(color: Colors.white70),
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                       Text(
-                                        '${weatherkaithal!.humidity}%',
+                                        '${weather!.humidity}%',
                                         style: const TextStyle(
-                                            color: Colors.white),
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -354,12 +456,93 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.remove_red_eye_outlined,
+                                    size: 30,
+                                    color: Colors.white70,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Visibility',
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${weather!.visibility}m',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.location_on,
+                                    size: 30,
+                                    color: Color(0xFFe9cc33),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Country',
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        weather!.country,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     )
                   else
                     const Text(
-                      'Fetching weather data for Kaithal...',
+                      'Fetching weather data...',
                       style: TextStyle(color: Colors.white70, fontSize: 16),
                       textAlign: TextAlign.center,
                     ),

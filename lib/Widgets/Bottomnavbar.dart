@@ -5,7 +5,7 @@ import 'package:weatherapp/Modal/forecast_model.dart';
 import 'package:weatherapp/Pages/Homepage.dart';
 import 'package:weatherapp/Pages/Profile.dart';
 import 'package:weatherapp/Widgets/notification.dart';
-import 'package:weatherapp/Widgets/weathermap.dart';
+import 'package:weatherapp/Widgets/Explore.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -20,25 +20,27 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> pages = [
     const HomePage(),
     const ExploreScreen(),
-    const Notifications(),
+    const GlobeExplorer(),
     AccountScreen(),
   ];
 
-  final Color backgroundColor = const Color(0xFF0D1B2A);
-  final Color activeColor = Colors.black;
-  final Color inactiveColor = Colors.white;
-  final Color barColor = Color(0xFF1B263B);
+
+  final Color backgroundColor = const Color(0xFF0F1626);
+  final Color barColor = const Color(0xFF1E2A44);
+  final Color activeColor = const Color(0xFFE39122); // Warm gold/orange, aligns with daytime theme
+  final Color inactiveColor = const Color(0xFFB0BEC5); // Soft grey, subtle yet readable
+  final Color buttonBackgroundColor = const Color(0xFF2E3155); // Deeper blue, complements gradient
 
   List<Widget> get navItems => [
-        Icon(LineIcons.home,
-            size: 30, color: selectedIndex == 0 ? activeColor : inactiveColor),
-        Icon(LineIcons.search,
-            size: 30, color: selectedIndex == 1 ? activeColor : inactiveColor),
-        Icon(LineIcons.bell,
-            size: 30, color: selectedIndex == 2 ? activeColor : inactiveColor),
-        Icon(LineIcons.user,
-            size: 30, color: selectedIndex == 3 ? activeColor : inactiveColor),
-      ];
+    Icon(LineIcons.home,
+        size: 30, color: selectedIndex == 0 ? activeColor : inactiveColor),
+    Icon(LineIcons.search,
+        size: 30, color: selectedIndex == 1 ? activeColor : inactiveColor),
+    Icon(LineIcons.globe,
+        size: 30, color: selectedIndex == 2 ? activeColor : inactiveColor),
+    Icon(LineIcons.user,
+        size: 30, color: selectedIndex == 3 ? activeColor : inactiveColor),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         height: 60,
         items: navItems,
         color: barColor,
-        buttonBackgroundColor: Colors.grey[300],
+        buttonBackgroundColor: buttonBackgroundColor,
         backgroundColor: backgroundColor,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),

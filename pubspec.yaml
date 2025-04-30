@@ -12,67 +12,70 @@ dependencies:
     sdk: flutter
 
   # UI and Icons
-  cupertino_icons:  
-  font_awesome_flutter:  
-  google_fonts:  
-  line_icons:  
-  flutter_svg:  
-  rive:  
+  cupertino_icons:
+  font_awesome_flutter:
+  google_fonts:
+  line_icons:
+  flutter_svg:
+  shared_preferences:
 
   # Networking and APIs
-  http:  
-  flutter_dotenv:  
-  onesignal_flutter:  
+  http:
+  flutter_dotenv:
+  onesignal_flutter:
+  permission_handler:
 
   # Location and Maps
-  geolocator:  
-  geocoding:  
-  flutter_map:  
-  flutter_map_location_marker:  
-  latlong2:  
-  google_maps_flutter:  
+  geolocator:
+  geocoding:
+  flutter_map:
+  flutter_map_location_marker:
+  latlong2:
+  google_maps_flutter:
 
   # State Management and Utilities
-  provider:  
-  intl:  
-  get:  
+  provider:
+  intl:
+  get:
 
   # Animations and Effects
-  lottie:  
-  animations:  
-  flare_flutter:  
-  parallax_animation:  
-  flutter_animate:  
-  flutter_glass:  
+  lottie:
+  animations:
+  flare_flutter:
+  parallax_animation:
+  flutter_animate:
+  flutter_glass:
 
   # Navigation and UI Components
-  google_nav_bar:  
-  curved_navigation_bar:  
-  flutter_slidable:  
-  settings_ui:  
-  stylish_bottom_bar:  
-  salomon_bottom_bar:  
+  google_nav_bar:
+  curved_navigation_bar:
+  flutter_slidable:
+  settings_ui:
+  stylish_bottom_bar:
+  salomon_bottom_bar:
 
   # 3D and Model Rendering
-  flutter_cube:  
-  flutter_3d_controller:  
-  model_viewer_plus:  
-  o3d:  
+  flutter_cube:
+  flutter_3d_controller:
+  model_viewer_plus:
+  o3d:
 
   # Media and Files
-  image_picker:  
-  shimmer:  
-  flutter_launcher_icons:  
+  image_picker:
+  shimmer:
+  vector_math:
+  flutter_launcher_icons:
+  sensors_plus:
 
   # Firebase
-  firebase_core:  
-  firebase_auth:  
-  google_sign_in:  
+  firebase_core:
+  firebase_auth:
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints:  
+  flutter_lints:
 
 flutter_launcher_icons:
   android: true
@@ -89,10 +92,10 @@ flutter:
 
     # JSON Animation Files
     - lib/assets/cloudy.json
+    - lib/assets/load.json
     - lib/assets/rain.json
     - lib/assets/snowfall.json
     - lib/assets/sunny.json
-    - lib/assets/Loading.json
     - lib/assets/Weather.json
     - lib/assets/sun.json
     - lib/assets/snow.json

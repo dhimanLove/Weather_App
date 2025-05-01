@@ -45,14 +45,14 @@ class _SignupScreenState extends State<SignupScreen>
       CurvedAnimation(parent: animationController, curve: Curves.easeInOut),
     );
 
-    floatAnimation =
-        Tween<Offset>(begin: const Offset(0, 10), end: const Offset(0, -10))
-            .animate(
+    floatAnimation = Tween<Offset>(
+      begin: const Offset(0, 10),
+      end: const Offset(0, -10),
+    ).animate(
       CurvedAnimation(parent: animationController, curve: Curves.easeInOutSine),
     );
-
   }
-  
+
   void signInWithGoogle() async {
     try {
       setState(() => isLoading = true);
@@ -124,13 +124,11 @@ class _SignupScreenState extends State<SignupScreen>
       try {
         setState(() => isLoading = true);
 
-        
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text,
-        );
-
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: emailController.text.trim(),
+              password: passwordController.text,
+            );
 
         // Update user display name (username)
         await userCredential.user?.updateDisplayName(usernameController.text);
@@ -149,7 +147,6 @@ class _SignupScreenState extends State<SignupScreen>
           animationDuration: const Duration(milliseconds: 500),
         );
 
-      
         Get.off(() => BottomNavBar);
       } on FirebaseAuthException catch (e) {
         setState(() => isLoading = false);
@@ -199,10 +196,7 @@ class _SignupScreenState extends State<SignupScreen>
             duration: const Duration(seconds: 5),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF1E2A44),
-                  const Color(0xFF0F1626),
-                ],
+                colors: [const Color(0xFF1E2A44), const Color(0xFF0F1626)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: const [0.0, 1.0],
@@ -286,8 +280,10 @@ class _SignupScreenState extends State<SignupScreen>
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 20,
+                ),
                 child: Form(
                   key: formKey,
                   child: Column(
@@ -341,8 +337,10 @@ class _SignupScreenState extends State<SignupScreen>
                           keyboardType: TextInputType.emailAddress,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.email_outlined,
-                                color: Colors.white70),
+                            prefixIcon: const Icon(
+                              Icons.email_outlined,
+                              color: Colors.white70,
+                            ),
                             hintText: "Email",
                             hintStyle: const TextStyle(color: Colors.white70),
                             border: OutlineInputBorder(
@@ -352,8 +350,11 @@ class _SignupScreenState extends State<SignupScreen>
                             filled: true,
                             fillColor: Colors.transparent,
                           ),
-                          validator: (value) =>
-                              value!.isEmpty ? 'Please enter your email' : null,
+                          validator:
+                              (value) =>
+                                  value!.isEmpty
+                                      ? 'Please enter your email'
+                                      : null,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -383,8 +384,10 @@ class _SignupScreenState extends State<SignupScreen>
                           keyboardType: TextInputType.name,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.person_outline,
-                                color: Colors.white70),
+                            prefixIcon: const Icon(
+                              Icons.person_outline,
+                              color: Colors.white70,
+                            ),
                             hintText: "Username",
                             hintStyle: const TextStyle(color: Colors.white70),
                             border: OutlineInputBorder(
@@ -394,9 +397,11 @@ class _SignupScreenState extends State<SignupScreen>
                             filled: true,
                             fillColor: Colors.transparent,
                           ),
-                          validator: (value) => value!.isEmpty
-                              ? 'Please enter your username'
-                              : null,
+                          validator:
+                              (value) =>
+                                  value!.isEmpty
+                                      ? 'Please enter your username'
+                                      : null,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -426,8 +431,10 @@ class _SignupScreenState extends State<SignupScreen>
                           obscureText: obscurePassword,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.lock_outline,
-                                color: Colors.white70),
+                            prefixIcon: const Icon(
+                              Icons.lock_outline,
+                              color: Colors.white70,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 obscurePassword
@@ -435,8 +442,10 @@ class _SignupScreenState extends State<SignupScreen>
                                     : Icons.visibility,
                                 color: Colors.white70,
                               ),
-                              onPressed: () => setState(
-                                  () => obscurePassword = !obscurePassword),
+                              onPressed:
+                                  () => setState(
+                                    () => obscurePassword = !obscurePassword,
+                                  ),
                             ),
                             hintText: "Password",
                             hintStyle: const TextStyle(color: Colors.white70),
@@ -447,9 +456,11 @@ class _SignupScreenState extends State<SignupScreen>
                             filled: true,
                             fillColor: Colors.transparent,
                           ),
-                          validator: (value) => value!.isEmpty
-                              ? 'Please enter your password'
-                              : null,
+                          validator:
+                              (value) =>
+                                  value!.isEmpty
+                                      ? 'Please enter your password'
+                                      : null,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -479,8 +490,10 @@ class _SignupScreenState extends State<SignupScreen>
                           obscureText: obscureConfirmPassword,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.lock_outline,
-                                color: Colors.white70),
+                            prefixIcon: const Icon(
+                              Icons.lock_outline,
+                              color: Colors.white70,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 obscureConfirmPassword
@@ -488,9 +501,12 @@ class _SignupScreenState extends State<SignupScreen>
                                     : Icons.visibility,
                                 color: Colors.white70,
                               ),
-                              onPressed: () => setState(() =>
-                                  obscureConfirmPassword =
-                                      !obscureConfirmPassword),
+                              onPressed:
+                                  () => setState(
+                                    () =>
+                                        obscureConfirmPassword =
+                                            !obscureConfirmPassword,
+                                  ),
                             ),
                             hintText: "Confirm Password",
                             hintStyle: const TextStyle(color: Colors.white70),
@@ -515,43 +531,47 @@ class _SignupScreenState extends State<SignupScreen>
                       // Animated Signup Button
                       isLoading
                           ? const CircularProgressIndicator(
-                              color: Color(0xFF4682B4))
+                            color: Color(0xFF4682B4),
+                          )
                           : GestureDetector(
-                              onTap: handleSignup,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 60, vertical: 18),
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFF4682B4),
-                                      Color(0xFF87CEEB)
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFF4682B4)
-                                          .withOpacity(0.5),
-                                      blurRadius: 20,
-                                      spreadRadius: 5,
-                                    ),
+                            onTap: handleSignup,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 60,
+                                vertical: 18,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF4682B4),
+                                    Color(0xFF87CEEB),
                                   ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
                                 ),
-                                child: const Text(
-                                  'Signup 🚀',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    letterSpacing: 1.2,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xFF4682B4,
+                                    ).withOpacity(0.5),
+                                    blurRadius: 20,
+                                    spreadRadius: 5,
                                   ),
+                                ],
+                              ),
+                              child: const Text(
+                                'Signup 🚀',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 1.2,
                                 ),
                               ),
                             ),
+                          ),
                       const SizedBox(height: 30),
 
                       // Social Login Buttons
@@ -565,7 +585,9 @@ class _SignupScreenState extends State<SignupScreen>
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
+                                horizontal: 20,
+                                vertical: 12,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
@@ -580,8 +602,11 @@ class _SignupScreenState extends State<SignupScreen>
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.g_mobiledata,
-                                      color: Colors.black, size: 28),
+                                  const Icon(
+                                    Icons.g_mobiledata,
+                                    color: Colors.black,
+                                    size: 28,
+                                  ),
                                   const SizedBox(width: 8),
                                   Text(
                                     'Google',
@@ -601,7 +626,9 @@ class _SignupScreenState extends State<SignupScreen>
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
+                                horizontal: 20,
+                                vertical: 12,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(12),
@@ -616,8 +643,11 @@ class _SignupScreenState extends State<SignupScreen>
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.apple,
-                                      color: Colors.white, size: 28),
+                                  const Icon(
+                                    Icons.apple,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
                                   const SizedBox(width: 8),
                                   Text(
                                     'Apple',
@@ -644,10 +674,7 @@ class _SignupScreenState extends State<SignupScreen>
                             color: Colors.white70,
                             fontSize: 16,
                             shadows: [
-                              Shadow(
-                                color: Colors.white24,
-                                blurRadius: 5,
-                              ),
+                              Shadow(color: Colors.white24, blurRadius: 5),
                             ],
                           ),
                         ),

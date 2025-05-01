@@ -101,8 +101,12 @@ flutter:
     - lib/assets/snow.json
 
     # 3D Model Assets
+    - lib/assets/Low Poly Pokeball/
     - lib/assets/Earth/
+    - lib/assets/Earth/NOVELO_EARTH.mtl
     - lib/assets/Challenger.obj
+    - lib/assets/Low Poly Pokeball/model.obj
+    - lib/assets/Earth/NOVELO_EARTH.obj
     - lib/assets/the-sun/
     - lib/assets/Sun/sun.obj
     - lib/assets/Sun/sun.mtl

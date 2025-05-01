@@ -13,17 +13,17 @@ class InfoScreen extends StatelessWidget {
 
   DateTime calculateSunsetTime(String city) {
     final now = DateTime.now().toUtc();
-    final baseSunsetHour = 18; // Approximate sunset hour (6 PM local time)
-    Map<String, double> cityOffsets = {
-      'New York': -4.0,    // UTC-4 (EDT)
-      'London': 1.0,       // UTC+1 (BST on April 30, 2025)
-      'Tokyo': 9.0,        // UTC+9
-      'Sydney': 10.0,      // UTC+10
-      'Kolkata': 5.5,      // UTC+5:30
-      'Mumbai': 5.5,       // UTC+5:30
-      'Delhi': 5.5,        // UTC+5:30
+    const baseSunsetHour = 18; // Approximate sunset hour (6 PM local time)
+    final cityOffsets = {
+      'New York': -4.0, // UTC-4 (EDT)
+      'London': 1.0, // UTC+1 (BST on May 1, 2025)
+      'Tokyo': 9.0, // UTC+9
+      'Sydney': 10.0, // UTC+10
+      'Kolkata': 5.5, // UTC+5:30
+      'Mumbai': 5.5, // UTC+5:30
+      'Delhi': 5.5, // UTC+5:30
     };
-    double offset = cityOffsets[city] ?? 0.0;
+    final offset = cityOffsets[city] ?? 0.0;
     return DateTime(now.year, now.month, now.day, baseSunsetHour)
         .toUtc()
         .add(Duration(hours: offset.toInt(), minutes: (offset % 1 * 60).toInt()));
@@ -63,7 +63,6 @@ class InfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentSunset = calculateSunsetTime(cityName);
     final isSunsetValid = currentSunset.isAfter(DateTime.now().toUtc());
-    final backgroundOpacity = isSunsetValid ? 0.2 : 0.1;
 
     return Scaffold(
       body: Container(
@@ -71,119 +70,198 @@ class InfoScreen extends StatelessWidget {
         width: Get.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.orange[400]!, Colors.blue[900]!],
+            colors: [Colors.orange.shade300, Colors.blue.shade900],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.08, vertical: Get.height * 0.05),
+            padding: EdgeInsets.symmetric(
+              horizontal: Get.width * 0.06,
+              vertical: Get.height * 0.03,
+            ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Header with Back and Refresh Buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Tooltip(
-                      message: 'Go back',
-                      child: GestureDetector(
-                        onTap: () => Get.back(),
-                        child: const Icon(Icons.arrow_back_ios, color: Colors.white70, size: 26),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 28,
                       ),
+                      tooltip: 'Go back',
+                      onPressed: () => Get.back(),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.refresh, color: Colors.white70, size: 26),
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      tooltip: 'Refresh',
                       onPressed: () {
-                        Get.snackbar('Refresh', 'Sunset times recalculated!',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.blueAccent.withOpacity(0.8),
-                            colorText: Colors.white);
+                        Get.snackbar(
+                          'Refreshed',
+                          'Sunset times updated!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue.shade700,
+                          colorText: Colors.white,
+                          margin: const EdgeInsets.all(16),
+                          borderRadius: 12,
+                        );
                       },
                     ),
                   ],
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: Get.height * 0.04),
 
-                // Custom Sunset Animation
-                SizedBox(
-                  width: 180,
-                  height: 180,
-                  child: CustomPaint(
-                    painter: SunsetPainter(sunset: currentSunset),
-                    child: Center(
-                      child: !isSunsetValid
-                          ? const CircularProgressIndicator(
-                        color: Colors.orangeAccent,
-                      )
-                          : const SizedBox(),
-                    ),
+                // Sunset Icon Animation
+                AnimatedContainer(
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.easeInOut,
+                  child: Icon(
+                    isSunsetValid ? Icons.wb_sunny : Icons.nightlight_round,
+                    size: 100,
+                    color: Colors.orange.shade200.withOpacity(0.9),
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: Get.height * 0.02),
+
+                // Title
                 Text(
-                  "Sunset Glow",
+                  'Sunset Glow',
                   style: GoogleFonts.playfairDisplay(
-                    fontSize: 42,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 38,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                     shadows: [
-                      const Shadow(
-                        blurRadius: 15,
-                        color: Colors.orangeAccent,
-                        offset: Offset(0, 2),
+                      Shadow(
+                        blurRadius: 10,
+                        color: Colors.orange.shade300.withOpacity(0.5),
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: Get.height * 0.015),
 
                 // Current City Sunset Info
-                Text(
-                  isSunsetValid ? '${formatSunsetTime(currentSunset)} in $cityName' : 'Calculating sunset...',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 22,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  color: Colors.white.withOpacity(0.15),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.location_city,
+                              color: Colors.orange.shade200,
+                              size: 24,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              cityName,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          isSunsetValid
+                              ? formatSunsetTime(currentSunset)
+                              : 'Calculating...',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          isSunsetValid
+                              ? getTimeUntilSunset(currentSunset)
+                              : 'Estimating...',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white60,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  isSunsetValid ? getTimeUntilSunset(currentSunset) : 'Estimating time...',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 16,
-                    color: Colors.white54,
-                    fontWeight: FontWeight.w400,
-                  ),
+                SizedBox(height: Get.height * 0.03),
+
+                // Divider
+                Divider(
+                  color: Colors.white.withOpacity(0.3),
+                  thickness: 1,
+                  indent: 20,
+                  endIndent: 20,
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: Get.height * 0.02),
 
-                Divider(color: Colors.white24),
-                const SizedBox(height: 20),
-
-                // Other Major Cities
+                // Global Sunset Times
                 Text(
-                  "Global Sunset Times",
+                  'Global Sunset Times',
                   style: GoogleFonts.montserrat(
                     fontSize: 20,
-                    color: Colors.orange[200],
                     fontWeight: FontWeight.w600,
+                    color: Colors.orange.shade200,
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: Get.height * 0.015),
+
+                // List of Other Cities
                 ...getOtherCitiesSunset().map((entry) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      "${entry.key}: ${formatSunsetTime(entry.value)}",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w400,
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.public,
+                        color: Colors.orange.shade200,
+                        size: 24,
+                      ),
+                      title: Text(
+                        entry.key,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      trailing: Text(
+                        formatSunsetTime(entry.value),
+                        style: GoogleFonts.montserrat(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      tileColor: Colors.white.withOpacity(0.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   );
                 }).toList(),
-                const SizedBox(height: 40),
+                SizedBox(height: Get.height * 0.04),
               ],
             ),
           ),
@@ -191,41 +269,4 @@ class InfoScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-// Custom Painter for Sunset Animation
-class SunsetPainter extends CustomPainter {
-  final DateTime sunset;
-
-  SunsetPainter({required this.sunset});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final now = DateTime.now().toUtc();
-    final diff = sunset.difference(now);
-    double progress = diff.inMinutes / (12 * 60); // Normalize to 12-hour window
-    progress = progress.clamp(0.0, 1.0);
-
-    final paintSky = Paint()..color = Colors.blue[900]!.withOpacity(0.8);
-    final paintSun = Paint()..color = Colors.orange[400]!;
-    final paintHorizon = Paint()..color = Colors.orange[200]!.withOpacity(0.6);
-
-    // Draw sky
-    canvas.drawRect(Offset.zero & size, paintSky);
-
-    // Draw horizon
-    final horizonHeight = size.height * 0.7;
-    canvas.drawRect(
-      Rect.fromLTWH(0, horizonHeight, size.width, size.height - horizonHeight),
-      paintHorizon,
-    );
-
-    // Draw sun
-    final sunRadius = size.width * 0.15;
-    final sunY = horizonHeight - (progress * (horizonHeight - sunRadius));
-    canvas.drawCircle(Offset(size.width * 0.5, sunY), sunRadius, paintSun);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

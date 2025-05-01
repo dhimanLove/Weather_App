@@ -27,7 +27,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
     setState(() {
       isLoading = true;
-      _weather = null; // Clear previous weather data
+      _weather = null;
     });
     try {
       final weather = await weatherservice.getWeather(weatherController.text);

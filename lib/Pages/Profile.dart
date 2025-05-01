@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -10,8 +13,25 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  File? _selectedImage; // To store the selected image
+  final ImagePicker _picker = ImagePicker();
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    String displayName = user?.displayName ?? 'No Name';
+    String email = user?.email ?? 'No Email';
+
     return Scaffold(
       backgroundColor: const Color(0xFF0D1117),
       floatingActionButton: FloatingActionButton(
@@ -80,18 +100,18 @@ class _AccountScreenState extends State<AccountScreen> {
                                 ),
                               ],
                             ),
-                            child: const CircleAvatar(
+                            child: CircleAvatar(
                               radius: 70,
                               backgroundColor: Colors.white10,
-                              backgroundImage: NetworkImage(
+                              backgroundImage: _selectedImage != null
+                                  ? FileImage(_selectedImage!)
+                                  : const NetworkImage(
                                 'https://via.placeholder.com/150/64FFDA/000000?Text=JD',
-                              ),
+                              ) as ImageProvider,
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              // Handle camera icon tap
-                            },
+                            onTap: _pickImage, // Call image picker
                             child: Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
@@ -121,7 +141,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       const SizedBox(height: 20),
                       // Name and Email
                       Text(
-                        'John Doe',
+                        displayName,
                         style: GoogleFonts.poppins(
                           fontSize: 28,
                           fontWeight: FontWeight.w700,
@@ -131,7 +151,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'john.doe@example.com',
+                        email,
                         style: GoogleFonts.poppins(
                           color: Colors.grey[400],
                           fontSize: 16,
@@ -340,7 +360,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: Column(
                     children: [
                       ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         leading: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -380,7 +401,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       const Divider(color: Colors.white10, height: 1),
                       ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         leading: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -420,7 +442,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       const Divider(color: Colors.white10, height: 1),
                       ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         leading: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -460,7 +483,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       const Divider(color: Colors.white10, height: 1),
                       ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         leading: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -500,7 +524,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       const Divider(color: Colors.white10, height: 1),
                       ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         leading: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -573,7 +598,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: Column(
                     children: [
                       ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         leading: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -613,7 +639,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       const Divider(color: Colors.white10, height: 1),
                       ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         leading: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(

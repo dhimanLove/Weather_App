@@ -4,7 +4,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:weatherapp/Modal/forecast_model.dart';
 import 'package:weatherapp/Pages/Homepage.dart';
 import 'package:weatherapp/Pages/Profile.dart';
-import 'package:weatherapp/Widgets/notification.dart';
+import 'package:weatherapp/Widgets/Globe.dart';
 import 'package:weatherapp/Widgets/Explore.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -20,7 +20,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> pages = [
     const HomePage(),
     const ExploreScreen(),
-    const GlobeExplorer(),
+    const Notifications(),
     AccountScreen(),
   ];
 

@@ -13,6 +13,7 @@ dependencies:
 
   # UI and Icons
   cupertino_icons:
+  url_launcher:
   font_awesome_flutter:
   google_fonts:
   line_icons:

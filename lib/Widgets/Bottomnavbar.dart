@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:weatherapp/Modal/forecast_model.dart';
+import 'package:weatherapp/Modal/news.dart';
 import 'package:weatherapp/Pages/Homepage.dart';
 import 'package:weatherapp/Pages/Profile.dart';
+import 'package:weatherapp/Pages/newscreen.dart';
+import 'package:weatherapp/Pages/newssss.dart';
 import 'package:weatherapp/Widgets/Globe.dart';
 import 'package:weatherapp/Widgets/Explore.dart';
 
@@ -20,16 +23,16 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> pages = [
     const HomePage(),
     const ExploreScreen(),
-    const Notifications(),
+    const NEWSListScreen(),
     AccountScreen(),
   ];
 
 
   final Color backgroundColor = const Color(0xFF0F1626);
   final Color barColor = const Color(0xFF1E2A44);
-  final Color activeColor = const Color(0xFFE39122); // Warm gold/orange, aligns with daytime theme
-  final Color inactiveColor = const Color(0xFFB0BEC5); // Soft grey, subtle yet readable
-  final Color buttonBackgroundColor = const Color(0xFF2E3155); // Deeper blue, complements gradient
+  final Color activeColor = const Color(0xFFE39122);
+  final Color inactiveColor = const Color(0xFFB0BEC5); 
+  final Color buttonBackgroundColor = const Color(0xFF2E3155); 
 
   List<Widget> get navItems => [
     Icon(LineIcons.home,

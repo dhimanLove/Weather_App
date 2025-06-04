@@ -11,7 +11,6 @@ void main() async {
   await Firebase.initializeApp();
   runApp(const MyApp());
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-
   OneSignal.initialize("YOUR_APP_ID");
   OneSignal.Notifications.requestPermission(true);
 }
@@ -29,8 +28,11 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
         title: 'Mausam Dekhlo',
         debugShowCheckedModeBanner: false,
-        home: FirebaseAuth.instance.currentUser != null
-            ? BottomNavBar()
-            : OnboardingScreen());
+        home: BottomNavBar());
   }
 }
+
+
+/* FirebaseAuth.instance.currentUser != null
+            ? BottomNavBar()
+            : OnboardingScreen());*/

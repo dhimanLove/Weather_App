@@ -21,8 +21,8 @@ class _NotificationsState extends State<Notifications> with SingleTickerProvider
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final double _zoomSensitivity = 200.0; // Added zoom sensitivity
-  double _previousScale = 1.0; // Store the scale
+  final double _zoomSensitivity = 200.0;
+  double _previousScale = 1.0;
 
   @override
   void initState() {
@@ -139,7 +139,7 @@ class _NotificationsState extends State<Notifications> with SingleTickerProvider
               child: GestureDetector(
                 onDoubleTap: resetView,
                 onScaleStart: (details) {
-                  _previousScale = 1.0; // Reset scale on start
+                  _previousScale = 1.0;
                 },
                 onScaleUpdate: (ScaleUpdateDetails details) {
                   if (scene != null && globeObject != null) {
@@ -151,7 +151,7 @@ class _NotificationsState extends State<Notifications> with SingleTickerProvider
                       globeObject!.rotation.y %= 360.0;
                       globeObject!.rotation.x %= 360.0;
 
-                      // Calculate zoom based on scale change
+
                       final scaleChange = details.scale - _previousScale;
                       scene!.camera.zoom =
                           (scene!.camera.zoom + scaleChange * _zoomSensitivity).clamp(5.0, 15.0);
@@ -172,7 +172,7 @@ class _NotificationsState extends State<Notifications> with SingleTickerProvider
                         });
                         try {
                           scene = createdScene;
-                          // Try loading Pokeball, fallback to cube if it fails
+
                           try {
                             globeObject = Object(
                               fileName: 'lib/assets/Low Poly Pokeball/model.obj',

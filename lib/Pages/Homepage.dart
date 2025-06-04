@@ -27,6 +27,24 @@ class _HomePageState extends State<HomePage> {
   Weather? weather;
   String locationName = 'Kaithal';
 
+  String getFeelsLikeText(Weather? weather) {
+    final feels = weather?.feelsLike;
+    if (feels == null) return '';
+
+    if (feels < 10) {
+      return 'Freezing, feels like ${feels.toStringAsFixed(1)}°C';
+    } else if (feels < 20) {
+      return 'Getting colder, feels like ${feels.toStringAsFixed(1)}°C';
+    } else if (feels < 30) {
+      return 'Quite warm, feels like ${feels.toStringAsFixed(1)}°C';
+    } else if (feels < 40) {
+      return 'Hot, feels like ${feels.toStringAsFixed(1)}°C';
+    } else if (feels < 50) {
+      return 'Extreme heat, feels like ${feels.toStringAsFixed(1)}°C';
+    }
+    return '';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -266,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Text(
-                          'Feels Like${weather?.feelsLike.toStringAsFixed(1)}°C',
+                          getFeelsLikeText(weather),
                           style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontSize: 15,
@@ -339,10 +357,11 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(onPressed: (){
-                                    Get.to(InfoScreen( cityName: weather!.cityName));
-                                  }, icon:
-                                    const Icon(
+                                  IconButton(
+                                    onPressed: () {
+                                      
+                                    },
+                                    icon: const Icon(
                                       Icons.wb_sunny,
                                       size: 30,
                                       color: Colors.orangeAccent,

@@ -45,3 +45,5 @@ app.*.map.json
 /android/app/releas
 lib/firebase_options.dart
 .env
+lib\Service\servi.dart
+lib\Modal\newsservice.dart
